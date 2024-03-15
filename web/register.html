@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Video Chat</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"
+        integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <style>
+        body {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        input[type="text"] {
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            outline: none;
+            border-radius: 4px;
+        }
+
+        input[type="submit"] {
+            padding: 8px 16px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: 1px solid #007bff;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+
+    <form hx-post="/register" hx-target="body">
+        <input type="text" placeholder="Enter username" name="username">
+        <input type="submit" value="Enter">
+    </form>
+</body>
+
+</html>

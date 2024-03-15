@@ -1,0 +1,4 @@
+.idea/
+bin/
+config/.env
+go.sum

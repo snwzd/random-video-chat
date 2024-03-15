@@ -46,6 +46,7 @@ func newUserEventCmd(redisConn *redis.Client, loggerInstance *zerolog.Logger) *U
 			go func() {
 				defer wg.Done()
 
+				loggerInstance.Info().Msg("starting user event server")
 				server.Run(ctx)
 			}()
 

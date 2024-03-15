@@ -47,6 +47,7 @@ func newForwarderCmd(redisConn *redis.Client, loggerInstance *zerolog.Logger) *F
 			go func() {
 				defer wg.Done()
 
+				loggerInstance.Info().Msg("starting forwarder server")
 				server.Run(ctx)
 			}()
 

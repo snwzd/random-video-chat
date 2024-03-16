@@ -7,6 +7,6 @@ RUN go mod tidy && CC=musl-gcc go build -o bin/user_service cmd/user_service/mai
 FROM docker.io/library/alpine:3.19
 RUN apk update && apk add ca-certificates && rm -rf /var/cache/apk/*
 WORKDIR /app
-COPY --from=build-env /app/bin/rvc /app/bin/rvc
+COPY --from=build-env /app/bin/user_service /app/bin/user_service
 COPY --from=build-env /app/web/ /app/web/
-ENTRYPOINT ["/app/bin/rvc"]
+ENTRYPOINT ["/app/bin/user_service"]

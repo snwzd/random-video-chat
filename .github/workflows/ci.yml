@@ -5,6 +5,7 @@ on:
     branches:
       - main
     paths-ignore:
+      - '**/assets/'
       - '**/README.md'
 
 jobs:

@@ -4,28 +4,32 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'cmd/forwarder_service/**'
+      - 'internal/common/**'
+      - 'internal/models/**'
+      - 'internal/services/forwarder/**'
     paths-ignore:
-      - '**/assets/'
-      - '**/README.md'
+      - 'assets/**'
+      - 'config/**'
+      - 'web/**'
+      - 'README.md'
 
 jobs:
   build-images:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        image: [user, userevent, userconnection, forwarder]
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v4
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Login to Docker Hub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
@@ -33,6 +37,6 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
-          file: Dockerfile.${{ matrix.image }}
+          file: Dockerfile.forwarder
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/rvc-${{ matrix.image }}:${{ github.sha }}
+          tags: ${{ secrets.DOCKER_USERNAME }}/rvc-forwarder:${{ github.sha }}

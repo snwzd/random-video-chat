@@ -10,8 +10,9 @@ on:
 jobs:
   build-images:
     runs-on: ubuntu-latest
-    matrix:
-      image: [user, userevent, userconnection, forwarder]
+    strategy:
+      matrix:
+        image: [user, userevent, userconnection, forwarder]
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4

@@ -2,6 +2,7 @@ package user
 
 import (
 	"errors"
+	"github.com/labstack/echo-contrib/echoprometheus"
 	"net/http"
 	"snwzt/rvc/internal/services/user/handlers"
 
@@ -24,6 +25,8 @@ func NewServer(port string, engine *echo.Echo, handlers handlers.ServerHandler) 
 
 func (svc *Server) Run() error {
 	svc.engine.GET("/health", svc.handlers.CheckHealth)
+	svc.engine.GET("/metrics", echoprometheus.NewHandler())
+	
 	svc.engine.GET("/", svc.handlers.Home)
 	svc.engine.POST("/register", svc.handlers.RegisterUser)
 	svc.engine.GET("/match", svc.handlers.MatchUser)

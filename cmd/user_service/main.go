@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/gorilla/sessions"
 	"github.com/joho/godotenv"
+	"github.com/labstack/echo-contrib/echoprometheus"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"os"
@@ -46,6 +47,7 @@ func main() {
 		},
 	}))
 	serverInstance.Use(middleware.Recover())
+	serverInstance.Use(echoprometheus.NewMiddleware("user_service"))
 
 	serverInstance.Renderer, err = common.NewTemplate("web/*.html")
 	if err != nil {

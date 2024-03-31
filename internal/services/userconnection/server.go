@@ -1,6 +1,8 @@
 package userconnection
 
 import (
+	"errors"
+	"github.com/labstack/echo-contrib/echoprometheus"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"net/http"
@@ -28,9 +30,11 @@ func (svc *Server) Run() error {
 	}))
 
 	svc.engine.GET("/health", svc.handlers.CheckHealth)
+	svc.engine.GET("/metrics", echoprometheus.NewHandler())
+
 	svc.engine.GET("/connection/:id", svc.handlers.Connection)
 
-	if err := svc.engine.Start(svc.port); err != nil && err != http.ErrServerClosed {
+	if err := svc.engine.Start(svc.port); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		return err
 	}
 

@@ -1,9 +1,11 @@
+# build env
 FROM docker.io/library/golang:1.22 AS build-env
 RUN apt update && apt install -y musl-tools
 WORKDIR /app
 COPY ./ /app
 RUN go mod tidy && CC=musl-gcc go build -o bin/userevent_service cmd/userevent_service/main.go
 
+# userevent
 FROM docker.io/library/alpine:3.19
 RUN apk update && apk add ca-certificates && rm -rf /var/cache/apk/*
 WORKDIR /app

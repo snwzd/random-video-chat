@@ -211,7 +211,6 @@
                                 event: 'offer',
                                 data: offer,
                             }));
-                            console.log('sent offer');
                         } catch (error) {
                             console.error('Error creating offer:', error);
                         }
@@ -227,7 +226,6 @@
                             event: 'answer',
                             data: answer,
                         }));
-                        console.log('got offer, sending answer');
                     } catch (error) {
                         console.error('Error handling offer:', error);
                     }
@@ -236,7 +234,6 @@
                 case 'answer':
                     try {
                         await peerConnection.setRemoteDescription(new RTCSessionDescription(msg.data));
-                        console.log('received answer');
                     } catch (error) {
                         console.error('Error handling answer:', error);
                     }
@@ -245,7 +242,6 @@
                 case 'candidate':
                     try {
                         await peerConnection.addIceCandidate(new RTCIceCandidate(msg.data));
-                        console.log('adding candidate');
                     } catch (error) {
                         console.error('Error adding ICE candidate:', error);
                     }
@@ -269,7 +265,6 @@
                         event: 'candidate',
                         data: event.candidate
                     }));
-                    console.log('sending candidate')
                 }
             };
 

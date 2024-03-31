@@ -9,10 +9,9 @@ on:
       - 'internal/common/**'
       - 'internal/models/**'
       - 'internal/services/user/**'
-    paths-ignore:
-      - 'assets/**'
-      - 'config/**'
-      - 'README.md'
+      - '!assets/**'
+      - '!config/**'
+      - '!README.md'
 
 jobs:
   build-images:

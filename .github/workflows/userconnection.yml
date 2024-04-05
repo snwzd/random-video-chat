@@ -9,6 +9,7 @@ on:
       - 'internal/common/**'
       - 'internal/models/**'
       - 'internal/services/userconnection/**'
+      - 'Dockerfile.userconnection'
       - '!assets/**'
       - '!config/**'
       - '!web/**'

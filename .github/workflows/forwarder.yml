@@ -9,6 +9,7 @@ on:
       - 'internal/common/**'
       - 'internal/models/**'
       - 'internal/services/forwarder/**'
+      - 'Dockerfile.forwarder'
       - '!assets/**'
       - '!config/**'
       - '!web/**'

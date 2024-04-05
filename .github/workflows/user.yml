@@ -9,6 +9,7 @@ on:
       - 'internal/common/**'
       - 'internal/models/**'
       - 'internal/services/user/**'
+      - 'Dockerfile.user'
       - '!assets/**'
       - '!config/**'
       - '!README.md'

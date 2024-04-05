@@ -9,6 +9,7 @@ on:
       - 'internal/common/**'
       - 'internal/models/**'
       - 'internal/services/userevent/**'
+      - 'Dockerfile.userevent'
       - '!assets/**'
       - '!config/**'
       - '!web/**'

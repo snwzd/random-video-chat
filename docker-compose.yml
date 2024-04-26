@@ -28,7 +28,7 @@ services:
       - internal
 
   user:
-    image: docker.io/notmde/rvc-user:0703d0e460ffc055e917dc93f9cf30f6fc8e951c
+    image: docker.io/notmde/rvc-user:fa149f98d9d02c69794b1fd0cfc5a6cc873999b8
     container_name: user-service
     environment:
       - REDIS_URI=redis://redis:6379
@@ -50,7 +50,7 @@ services:
       - internal
 
   user-connection:
-    image: docker.io/notmde/rvc-userconnection:0703d0e460ffc055e917dc93f9cf30f6fc8e951c
+    image: docker.io/notmde/rvc-userconnection:fa149f98d9d02c69794b1fd0cfc5a6cc873999b8
     container_name: user-connection-service
     environment:
       - REDIS_URI=redis://redis:6379
@@ -65,7 +65,7 @@ services:
       - internal
 
   forwarder:
-    image: docker.io/notmde/rvc-forwarder:0703d0e460ffc055e917dc93f9cf30f6fc8e951c
+    image: docker.io/notmde/rvc-forwarder:fa149f98d9d02c69794b1fd0cfc5a6cc873999b8
     container_name: forwarder-service
     environment:
       - REDIS_URI=redis://redis:6379
@@ -79,7 +79,7 @@ services:
       - internal
 
   user-event:
-    image: docker.io/notmde/rvc-userevent:0703d0e460ffc055e917dc93f9cf30f6fc8e951c
+    image: docker.io/notmde/rvc-userevent:fa149f98d9d02c69794b1fd0cfc5a6cc873999b8
     container_name: user-event-service
     environment:
       - REDIS_URI=redis://redis:6379

@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   traefik:
-    image: traefik:v2.5
+    image: docker.io/library/traefik:v2.5
     command:
       - --providers.docker=true
       - --providers.docker.network=proxy
@@ -22,13 +22,13 @@ services:
       - internal
 
   redis:
-    image: redis:latest
+    image: docker.io/library/redis:7
     container_name: redis
     networks:
       - internal
 
   user:
-    image: notmde/rvc-user:latest
+    image: docker.io/notmde/rvc-user:0703d0e460ffc055e917dc93f9cf30f6fc8e951c
     container_name: user-service
     environment:
       - REDIS_URI=redis://redis:6379
@@ -41,16 +41,16 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.services.user-service.loadbalancer.server.port=5000
-      - traefik.http.routers.userHomeRouter.rule=Host(`localhost`) && Path(`/`)
-      - traefik.http.routers.userRegisterRouter.rule=Host(`localhost`) && Path(`/register`)
-      - traefik.http.routers.userMatchRouter.rule=Host(`localhost`) && Path(`/match`)
-      - traefik.http.routers.userHealthRouter.rule=Host(`localhost`) && PathPrefix(`/user/health`)
+      - traefik.http.routers.userHomeRouter.rule=Path(`/`)
+      - traefik.http.routers.userRegisterRouter.rule=Path(`/register`)
+      - traefik.http.routers.userMatchRouter.rule=Path(`/match`)
+      - traefik.http.routers.userHealthRouter.rule=PathPrefix(`/user/health`)
       - traefik.http.routers.userHealthRouter.middlewares=replacePathHealth,rateLimiter
     networks:
       - internal
 
   user-connection:
-    image: notmde/rvc-userconnection:latest
+    image: docker.io/notmde/rvc-userconnection:0703d0e460ffc055e917dc93f9cf30f6fc8e951c
     container_name: user-connection-service
     environment:
       - REDIS_URI=redis://redis:6379
@@ -58,14 +58,14 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.services.chat-service.loadbalancer.server.port=5001
-      - traefik.http.routers.chatWSRouter.rule=Host(`localhost`) && PathPrefix(`/connection/`)
-      - traefik.http.routers.chatHealthRouter.rule=Host(`localhost`) && PathPrefix(`/connection/health`)
+      - traefik.http.routers.chatWSRouter.rule=PathPrefix(`/connection/`)
+      - traefik.http.routers.chatHealthRouter.rule=PathPrefix(`/connection/health`)
       - traefik.http.routers.chatHealthRouter.middlewares=replacePathHealth,rateLimiter
     networks:
       - internal
 
   forwarder:
-    image: notmde/rvc-forwarder:latest
+    image: docker.io/notmde/rvc-forwarder:0703d0e460ffc055e917dc93f9cf30f6fc8e951c
     container_name: forwarder-service
     environment:
       - REDIS_URI=redis://redis:6379
@@ -73,13 +73,13 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.services.forwarder-service.loadbalancer.server.port=5001
-      - traefik.http.routers.forwarderHealthRouter.rule=Host(`localhost`) && PathPrefix(`/connection/health`)
+      - traefik.http.routers.forwarderHealthRouter.rule=PathPrefix(`/connection/health`)
       - traefik.http.routers.forwarderHealthRouter.middlewares=replacePathHealth,rateLimiter
     networks:
       - internal
 
   user-event:
-    image: notmde/rvc-userevent:latest
+    image: docker.io/notmde/rvc-userevent:0703d0e460ffc055e917dc93f9cf30f6fc8e951c
     container_name: user-event-service
     environment:
       - REDIS_URI=redis://redis:6379
@@ -87,7 +87,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.services.user-event-service.loadbalancer.server.port=5001
-      - traefik.http.routers.usereventHealthRouter.rule=Host(`localhost`) && PathPrefix(`/connection/health`)
+      - traefik.http.routers.usereventHealthRouter.rule=PathPrefix(`/connection/health`)
       - traefik.http.routers.usereventHealthRouter.middlewares=replacePathHealth,rateLimiter
     networks:
       - internal

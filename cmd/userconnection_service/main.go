@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"github.com/labstack/echo-contrib/echoprometheus"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"os"
@@ -45,7 +44,6 @@ func main() {
 		},
 	}))
 	serverInstance.Use(middleware.Recover())
-	serverInstance.Use(echoprometheus.NewMiddleware("user_service"))
 
 	handle := &handlers.ServerHandle{
 		Redis:  redisConn,

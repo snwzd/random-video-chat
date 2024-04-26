@@ -2,7 +2,6 @@ package userevent
 
 import (
 	"context"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"net/http"
 	"os"
 	"snwzt/rvc/internal/services/userevent/handlers"
@@ -39,8 +38,8 @@ func (svc *Server) Run(ctx context.Context) {
 	go func() {
 		http.HandleFunc("/health", func(writer http.ResponseWriter, request *http.Request) {
 			writer.WriteHeader(http.StatusOK)
+			writer.Write([]byte("healthy"))
 		})
-		http.Handle("/metrics", promhttp.Handler())
 
 		err := http.ListenAndServe(":"+os.Getenv("USEREVENT_SERVICE_PORT"), nil)
 		if err != nil {

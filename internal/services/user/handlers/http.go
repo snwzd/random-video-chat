@@ -26,7 +26,7 @@ type ServerHandle struct {
 }
 
 func (h *ServerHandle) CheckHealth(c echo.Context) error {
-	return c.NoContent(http.StatusOK)
+	return c.String(http.StatusOK, "healthy")
 }
 
 func (h *ServerHandle) Home(c echo.Context) error {

@@ -72,8 +72,8 @@ services:
       - FORWARDER_SERVICE_PORT=5002
     labels:
       - traefik.enable=true
-      - traefik.http.services.forwarder-service.loadbalancer.server.port=5001
-      - traefik.http.routers.forwarderHealthRouter.rule=PathPrefix(`/connection/health`)
+      - traefik.http.services.forwarder-service.loadbalancer.server.port=5002
+      - traefik.http.routers.forwarderHealthRouter.rule=PathPrefix(`/forwarder/health`)
       - traefik.http.routers.forwarderHealthRouter.middlewares=replacePathHealth,rateLimiter
     networks:
       - internal
@@ -86,8 +86,8 @@ services:
       - USEREVENT_SERVICE_PORT=5003
     labels:
       - traefik.enable=true
-      - traefik.http.services.user-event-service.loadbalancer.server.port=5001
-      - traefik.http.routers.usereventHealthRouter.rule=PathPrefix(`/connection/health`)
+      - traefik.http.services.user-event-service.loadbalancer.server.port=5003
+      - traefik.http.routers.usereventHealthRouter.rule=PathPrefix(`/userevent/health`)
       - traefik.http.routers.usereventHealthRouter.middlewares=replacePathHealth,rateLimiter
     networks:
       - internal

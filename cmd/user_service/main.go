@@ -24,6 +24,7 @@ func main() {
 	//if err := godotenv.Load("config/.env"); err != nil {
 	//	loggerInstance.Err(err).Msg("unable to load env file")
 	//	os.Exit(1)
+	//
 	//}
 
 	redisConn, err := common.NewRedisStore(os.Getenv("REDIS_URI"))

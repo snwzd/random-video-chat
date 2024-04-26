@@ -10,6 +10,7 @@ on:
       - 'internal/models/**'
       - 'internal/services/userevent/**'
       - 'Dockerfile.userevent'
+      - '!docker-compose.yml'
       - '!assets/**'
       - '!config/**'
       - '!web/**'

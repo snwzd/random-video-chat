@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"github.com/joho/godotenv"
 	"os"
 	"os/signal"
 	"snwzt/rvc/internal/common"
@@ -18,10 +17,10 @@ func main() {
 
 	loggerInstance := common.NewLogger()
 
-	if err := godotenv.Load("config/.env"); err != nil {
-		loggerInstance.Err(err).Msg("unable to load env file")
-		os.Exit(1)
-	}
+	//if err := godotenv.Load("config/.env"); err != nil {
+	//	loggerInstance.Err(err).Msg("unable to load env file")
+	//	os.Exit(1)
+	//}
 
 	redisConn, err := common.NewRedisStore(os.Getenv("REDIS_URI"))
 	if err != nil {

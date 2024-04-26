@@ -10,6 +10,7 @@ on:
       - 'internal/models/**'
       - 'internal/services/forwarder/**'
       - 'Dockerfile.forwarder'
+      - '!docker-compose.yml'
       - '!assets/**'
       - '!config/**'
       - '!web/**'

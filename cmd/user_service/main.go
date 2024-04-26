@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"github.com/gorilla/sessions"
-	"github.com/joho/godotenv"
 	"github.com/labstack/echo-contrib/echoprometheus"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -22,10 +21,10 @@ func main() {
 
 	loggerInstance := common.NewLogger()
 
-	if err := godotenv.Load("config/.env"); err != nil {
-		loggerInstance.Err(err).Msg("unable to load env file")
-		os.Exit(1)
-	}
+	//if err := godotenv.Load("config/.env"); err != nil {
+	//	loggerInstance.Err(err).Msg("unable to load env file")
+	//	os.Exit(1)
+	//}
 
 	redisConn, err := common.NewRedisStore(os.Getenv("REDIS_URI"))
 	if err != nil {

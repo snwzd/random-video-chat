@@ -10,6 +10,7 @@ on:
       - 'internal/models/**'
       - 'internal/services/user/**'
       - 'Dockerfile.user'
+      - '!docker-compose.yml'
       - '!assets/**'
       - '!config/**'
       - '!README.md'

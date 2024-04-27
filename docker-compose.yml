@@ -15,7 +15,6 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     labels:
       - traefik.enable=true
-      - traefik.http.middlewares.replacePathHealth.replacepath.path=/health
       - traefik.http.middlewares.rateLimiter.ratelimit.average=100
       - traefik.http.middlewares.rateLimiter.ratelimit.burst=50
     networks:
@@ -30,6 +29,8 @@ services:
   user:
     image: docker.io/notmde/rvc-user:fa149f98d9d02c69794b1fd0cfc5a6cc873999b8
     container_name: user-service
+    depends_on:
+      - redis
     environment:
       - REDIS_URI=redis://redis:6379
       - USER_SERVICE_PORT=5000
@@ -42,53 +43,77 @@ services:
       - traefik.enable=true
       - traefik.http.services.user-service.loadbalancer.server.port=5000
       - traefik.http.routers.userHomeRouter.rule=Path(`/`)
+      - traefik.http.routers.userHomeRouter.middlewares=rateLimiter
       - traefik.http.routers.userRegisterRouter.rule=Path(`/register`)
+      - traefik.http.routers.userRegisterRouter.middlewares=rateLimiter
       - traefik.http.routers.userMatchRouter.rule=Path(`/match`)
-      - traefik.http.routers.userHealthRouter.rule=PathPrefix(`/user/health`)
-      - traefik.http.routers.userHealthRouter.middlewares=replacePathHealth,rateLimiter
+      - traefik.http.routers.userMatchRouter.middlewares=rateLimiter
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "-q", "-S", "http://localhost:5000/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
     networks:
       - internal
 
   user-connection:
     image: docker.io/notmde/rvc-userconnection:fa149f98d9d02c69794b1fd0cfc5a6cc873999b8
     container_name: user-connection-service
+    depends_on:
+      - redis
     environment:
       - REDIS_URI=redis://redis:6379
       - USERCONN_SERVICE_PORT=5001
     labels:
       - traefik.enable=true
-      - traefik.http.services.chat-service.loadbalancer.server.port=5001
-      - traefik.http.routers.chatWSRouter.rule=PathPrefix(`/connection/`)
-      - traefik.http.routers.chatHealthRouter.rule=PathPrefix(`/connection/health`)
-      - traefik.http.routers.chatHealthRouter.middlewares=replacePathHealth,rateLimiter
+      - traefik.http.services.user-connection-service.loadbalancer.server.port=5001
+      - traefik.http.routers.userconnWSRouter.rule=PathPrefix(`/connection/`)
+      - traefik.http.routers.userconnWSRouter.middlewares=rateLimiter
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "-q", "-S", "http://localhost:5001/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
     networks:
       - internal
 
   forwarder:
     image: docker.io/notmde/rvc-forwarder:fa149f98d9d02c69794b1fd0cfc5a6cc873999b8
     container_name: forwarder-service
+    depends_on:
+      - redis
     environment:
       - REDIS_URI=redis://redis:6379
       - FORWARDER_SERVICE_PORT=5002
     labels:
-      - traefik.enable=true
-      - traefik.http.services.forwarder-service.loadbalancer.server.port=5002
-      - traefik.http.routers.forwarderHealthRouter.rule=PathPrefix(`/forwarder/health`)
-      - traefik.http.routers.forwarderHealthRouter.middlewares=replacePathHealth,rateLimiter
+      - traefik.enable=false
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "-q", "-S", "http://localhost:5002/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
     networks:
       - internal
 
   user-event:
     image: docker.io/notmde/rvc-userevent:fa149f98d9d02c69794b1fd0cfc5a6cc873999b8
     container_name: user-event-service
+    depends_on:
+      - redis
     environment:
       - REDIS_URI=redis://redis:6379
       - USEREVENT_SERVICE_PORT=5003
     labels:
-      - traefik.enable=true
-      - traefik.http.services.user-event-service.loadbalancer.server.port=5003
-      - traefik.http.routers.usereventHealthRouter.rule=PathPrefix(`/userevent/health`)
-      - traefik.http.routers.usereventHealthRouter.middlewares=replacePathHealth,rateLimiter
+      - traefik.enable=false
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "-q", "-S", "http://localhost:5003/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
     networks:
       - internal
 

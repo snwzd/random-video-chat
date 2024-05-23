@@ -29,6 +29,15 @@ func main() {
 		os.Exit(1)
 	}
 
+	var goroutines map[string]context.CancelFunc
+
+	// metrics
+
+	promMetrics := session.NewPromMetrics()
+	go promMetrics.Counter(goroutines)
+
+	// http
+
 	storage := &session.Storage{
 		RedisClient: redisConn,
 	}
@@ -36,7 +45,7 @@ func main() {
 	handle := &session.ServerHandle{
 		Store:      storage,
 		Logger:     loggerInstance,
-		Goroutines: make(map[string]context.CancelFunc),
+		Goroutines: goroutines,
 	}
 
 	server := session.NewServer(":"+os.Getenv("SESSION_SERVICE_PORT"), handle)

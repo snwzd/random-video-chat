@@ -2,11 +2,36 @@ package session
 
 import (
 	"context"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
 	"net/http"
 	"sync"
+	"time"
 
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
+
+type PromMetrics struct {
+	msgGauge prometheus.Gauge
+}
+
+func NewPromMetrics() *PromMetrics {
+	msgGauge := promauto.NewGauge(prometheus.GaugeOpts{
+		Name: "num_session_gauge",
+		Help: "counter of number of sessions currently running in the instance",
+	})
+
+	return &PromMetrics{
+		msgGauge: msgGauge,
+	}
+}
+
+func (p *PromMetrics) Counter(goroutines map[string]context.CancelFunc) {
+	for {
+		p.msgGauge.Set(float64(len(goroutines)))
+		time.Sleep(2 * time.Second)
+	}
+}
 
 type Server struct {
 	port     string

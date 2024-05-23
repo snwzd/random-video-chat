@@ -29,7 +29,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	var goroutines map[string]context.CancelFunc
+	goroutines := make(map[string]context.CancelFunc)
 
 	// metrics
 

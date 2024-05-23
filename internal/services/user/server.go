@@ -2,6 +2,7 @@ package user
 
 import (
 	"errors"
+	"github.com/labstack/echo-contrib/echoprometheus"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"golang.org/x/net/context"
@@ -35,12 +36,14 @@ func (svc *Server) Run(ctx context.Context) error {
 	go func() {
 		defer wg.Done()
 
+		svc.engine.Use(echoprometheus.NewMiddleware("user_app"))
 		svc.engine.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 			AllowOrigins: []string{"*"},
 			AllowMethods: []string{http.MethodGet, http.MethodPost},
 		}))
 
 		svc.engine.GET("/health", svc.httpHandlers.checkHealth)
+		svc.engine.GET("/metrics", echoprometheus.NewHandler())
 		svc.engine.GET("/", svc.httpHandlers.home)
 		svc.engine.POST("/register", svc.httpHandlers.registerUser)
 		svc.engine.GET("/connection/:id", svc.httpHandlers.connection)

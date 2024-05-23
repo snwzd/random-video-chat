@@ -4,6 +4,8 @@ import (
 	"context"
 	"net/http"
 	"sync"
+
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 type Server struct {
@@ -43,6 +45,8 @@ func (svc *Server) Run(ctx context.Context) {
 				return
 			}
 		})
+
+		http.Handle("/metrics", promhttp.Handler())
 
 		err := http.ListenAndServe(svc.port, nil)
 		if err != nil {

@@ -1,7 +1,7 @@
 package models
 
-type UserEntry struct {
-	ID       string
+type User struct {
+	UserID   string
 	Username string
 	IPAddr   string
 	MatchID  string

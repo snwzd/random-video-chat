@@ -13,6 +13,7 @@ services:
       - 8080:8080
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+#      - /run/user/1000/podman/podman.sock:/var/run/docker.sock # for podman
     labels:
       - traefik.enable=true
       - traefik.http.middlewares.rateLimiter.ratelimit.average=100
@@ -27,7 +28,7 @@ services:
       - internal
 
   user:
-    image: docker.io/notmde/rvc-user:fa149f98d9d02c69794b1fd0cfc5a6cc873999b8
+    image: docker.io/notmde/rvc-user:fa0c39ada60b30490d31ddd73e90c7705486eadd
     container_name: user-service
     depends_on:
       - redis
@@ -38,7 +39,8 @@ services:
       - TURN_USERNAME=
       - TURN_CRED=
       - SESSION_KEY=secret
-      - PRODUCTION_FLAG=0
+      - SECURE_FLAG=0
+      - SKIP_DOTENV=1
     labels:
       - traefik.enable=true
       - traefik.http.services.user-service.loadbalancer.server.port=5000
@@ -48,6 +50,8 @@ services:
       - traefik.http.routers.userRegisterRouter.middlewares=rateLimiter
       - traefik.http.routers.userMatchRouter.rule=Path(`/match`)
       - traefik.http.routers.userMatchRouter.middlewares=rateLimiter
+      - traefik.http.routers.userConnWSRouter.rule=PathPrefix(`/connection/`)
+      - traefik.http.routers.userConnWSRouter.middlewares=rateLimiter
     healthcheck:
       test: [ "CMD", "wget", "--spider", "-q", "-S", "http://localhost:5000/health" ]
       interval: 30s
@@ -57,59 +61,19 @@ services:
     networks:
       - internal
 
-  user-connection:
-    image: docker.io/notmde/rvc-userconnection:fa149f98d9d02c69794b1fd0cfc5a6cc873999b8
-    container_name: user-connection-service
+  session:
+    image: docker.io/notmde/rvc-session:fa0c39ada60b30490d31ddd73e90c7705486eadd
+    container_name: session-service
     depends_on:
       - redis
     environment:
       - REDIS_URI=redis://redis:6379
-      - USERCONN_SERVICE_PORT=5001
+      - SESSION_SERVICE_PORT=5001
+      - SKIP_DOTENV=1
     labels:
-      - traefik.enable=true
-      - traefik.http.services.user-connection-service.loadbalancer.server.port=5001
-      - traefik.http.routers.userconnWSRouter.rule=PathPrefix(`/connection/`)
-      - traefik.http.routers.userconnWSRouter.middlewares=rateLimiter
+      - traefik.enable=false
     healthcheck:
       test: [ "CMD", "wget", "--spider", "-q", "-S", "http://localhost:5001/health" ]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-    networks:
-      - internal
-
-  forwarder:
-    image: docker.io/notmde/rvc-forwarder:fa149f98d9d02c69794b1fd0cfc5a6cc873999b8
-    container_name: forwarder-service
-    depends_on:
-      - redis
-    environment:
-      - REDIS_URI=redis://redis:6379
-      - FORWARDER_SERVICE_PORT=5002
-    labels:
-      - traefik.enable=false
-    healthcheck:
-      test: [ "CMD", "wget", "--spider", "-q", "-S", "http://localhost:5002/health" ]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-    networks:
-      - internal
-
-  user-event:
-    image: docker.io/notmde/rvc-userevent:fa149f98d9d02c69794b1fd0cfc5a6cc873999b8
-    container_name: user-event-service
-    depends_on:
-      - redis
-    environment:
-      - REDIS_URI=redis://redis:6379
-      - USEREVENT_SERVICE_PORT=5003
-    labels:
-      - traefik.enable=false
-    healthcheck:
-      test: [ "CMD", "wget", "--spider", "-q", "-S", "http://localhost:5003/health" ]
       interval: 30s
       timeout: 10s
       retries: 3

@@ -1,4 +1,5 @@
-.idea/
-bin/
+bin
+.idea
 config/.env
 go.sum
+README.md

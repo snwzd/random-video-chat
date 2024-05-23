@@ -5,11 +5,11 @@ on:
     branches:
       - main
     paths:
-      - 'cmd/user_service/**'
+      - 'cmd/user/**'
       - 'internal/common/**'
       - 'internal/models/**'
       - 'internal/services/user/**'
-      - 'Dockerfile.user'
+      - 'user.dockerfile'
       - '!docker-compose.yml'
       - '!assets/**'
       - '!config/**'
@@ -37,6 +37,6 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
-          file: Dockerfile.user
+          file: user.dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/rvc-user:${{ github.sha }}

@@ -1,15 +1,15 @@
-name: CI User Connection
+name: CI Session
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'cmd/userconnection_service/**'
+      - 'cmd/session/**'
       - 'internal/common/**'
       - 'internal/models/**'
-      - 'internal/services/userconnection/**'
-      - 'Dockerfile.userconnection'
+      - 'internal/services/session/**'
+      - 'session.dockerfile'
       - '!docker-compose.yml'
       - '!assets/**'
       - '!config/**'
@@ -38,6 +38,6 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
-          file: Dockerfile.userconnection
+          file: session.dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/rvc-userconnection:${{ github.sha }}
+          tags: ${{ secrets.DOCKER_USERNAME }}/rvc-session:${{ github.sha }}

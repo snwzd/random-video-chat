@@ -1,19 +1,19 @@
-package userevent
+package session
 
 import (
 	"context"
 	"net/http"
-	"os"
-	"snwzt/rvc/internal/services/userevent/handlers"
 	"sync"
 )
 
 type Server struct {
-	handlers handlers.ServerHandler
+	port     string
+	handlers ServerHandler
 }
 
-func NewServer(handlers handlers.ServerHandler) *Server {
+func NewServer(port string, handlers ServerHandler) *Server {
 	return &Server{
+		port:     port,
 		handlers: handlers,
 	}
 }
@@ -25,23 +25,26 @@ func (svc *Server) Run(ctx context.Context) {
 	go func() {
 		defer wg.Done()
 
-		svc.handlers.Match(ctx)
+		svc.handlers.createSession(ctx)
 	}()
 
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
 
-		svc.handlers.Remove(ctx)
+		go svc.handlers.deleteSession(ctx)
 	}()
 
 	go func() {
 		http.HandleFunc("/health", func(writer http.ResponseWriter, request *http.Request) {
 			writer.WriteHeader(http.StatusOK)
-			writer.Write([]byte("healthy"))
+			_, err := writer.Write([]byte("healthy"))
+			if err != nil {
+				return
+			}
 		})
 
-		err := http.ListenAndServe(":"+os.Getenv("USEREVENT_SERVICE_PORT"), nil)
+		err := http.ListenAndServe(svc.port, nil)
 		if err != nil {
 			return
 		}

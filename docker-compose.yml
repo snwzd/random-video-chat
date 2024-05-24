@@ -83,7 +83,7 @@ services:
       - internal
 
   session:
-    image: docker.io/notmde/rvc-session:6e9c6c01b6a94fbc97779d85e7c6e679910e854f
+    image: docker.io/notmde/rvc-session:1d7617e53bd2e59e7ef67db9f15011c9dd88a00b
     container_name: session-service
     depends_on:
       - redis

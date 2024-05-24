@@ -13,6 +13,8 @@ on:
       - '!docker-compose.yml'
       - '!assets/**'
       - '!config/**'
+      - '!grafana/**'
+      - '!prometheus/**'
       - '!README.md'
 
 jobs:
@@ -40,3 +42,24 @@ jobs:
           file: user.dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/rvc-user:${{ github.sha }}
+
+  update-docker-compose:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Update Docker Compose
+        run: |
+          sed -i 's|docker.io/notmde/rvc-user.*|docker.io/notmde/rvc-user:${{ github.sha }}|g' docker-compose.yml
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git add docker-compose.yml
+          git commit -m "Update docker-compose.yml with ${{ github.sha }} image tag"
+          git push origin HEAD:refs/heads/update-docker-compose-for-user-service
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          title: Update Docker Compose with latest image tag
+          commit-message: Update Docker Compose with latest image tag
+          branch: update-docker-compose-for-user-service

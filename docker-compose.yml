@@ -49,7 +49,7 @@ services:
       - internal
 
   user:
-    image: docker.io/notmde/rvc-user:56e7ffb5c72254f86446a03b27901b3663f42e26
+    image: docker.io/notmde/rvc-user:1d7617e53bd2e59e7ef67db9f15011c9dd88a00b
     container_name: user-service
     depends_on:
       - redis

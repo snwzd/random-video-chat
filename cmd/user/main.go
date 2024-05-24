@@ -52,20 +52,24 @@ func main() {
 		loggerInstance.Err(err).Msg("unable to load templates")
 	}
 
+	httpStorage := &user.HttpStorage{
+		RedisClient: redisConn,
+	}
+
 	httpHandle := &user.HttpServerHandle{
 		SessionStore: sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY"))),
 		Logger:       loggerInstance,
 		Ctx:          ctx,
-		Store: &user.HttpStorage{
-			RedisClient: redisConn,
-		},
+		Store:        httpStorage,
+	}
+
+	eventStorage := &user.EventStorage{
+		RedisClient: redisConn,
 	}
 
 	eventHandle := &user.EventServerHandle{
 		Logger: loggerInstance,
-		Store: &user.EventStorage{
-			RedisClient: redisConn,
-		},
+		Store:  eventStorage,
 	}
 
 	server := user.NewServer(":"+os.Getenv("USER_SERVICE_PORT"), serverInstance, httpHandle, eventHandle)

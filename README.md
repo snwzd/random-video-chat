@@ -25,7 +25,7 @@ make run-session
 ```
 
 ## Working
-![working](assets/working.png)
+![working](assets/workflow.png)
 
 ## Demo
-![demo](assets/working2.png)
+![demo](assets/demo.png)

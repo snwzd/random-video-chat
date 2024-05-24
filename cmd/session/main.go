@@ -32,12 +32,10 @@ func main() {
 	goroutines := make(map[string]context.CancelFunc)
 
 	// metrics
-
 	promMetrics := session.NewPromMetrics()
 	go promMetrics.Counter(goroutines)
 
 	// http
-
 	storage := &session.Storage{
 		RedisClient: redisConn,
 	}

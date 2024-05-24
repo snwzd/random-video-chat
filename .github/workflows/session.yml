@@ -17,6 +17,7 @@ on:
       - '!grafana/**'
       - '!prometheus/**'
       - '!README.md'
+      - '!go.mod'
 
 jobs:
   build-push-images:

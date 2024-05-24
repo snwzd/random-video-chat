@@ -6,11 +6,11 @@ services:
     command:
       - --providers.docker=true
       - --providers.docker.network=proxy
-      - --entrypoints.web.address=:3000
+      - --entrypoints.web.address=:5500
       - --api.insecure=true
     ports:
-      - 3000:3000
-      - 8080:8080
+      - "5500:5500"
+      - "8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 #      - /run/user/1000/podman/podman.sock:/var/run/docker.sock # for podman
@@ -21,6 +21,27 @@ services:
     networks:
       - internal
 
+  prometheus:
+    image: docker.io/prom/prometheus:v2.52.0
+    volumes:
+      - "./prometheus:/etc/prometheus"
+    networks:
+      - internal
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: docker.io/grafana/grafana:10.1.10
+    container_name: grafana
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=grafana
+    volumes:
+      - ./grafana:/etc/grafana/provisioning/datasources
+
   redis:
     image: docker.io/library/redis:7
     container_name: redis
@@ -28,7 +49,7 @@ services:
       - internal
 
   user:
-    image: docker.io/notmde/rvc-user:fa0c39ada60b30490d31ddd73e90c7705486eadd
+    image: docker.io/notmde/rvc-user:56e7ffb5c72254f86446a03b27901b3663f42e26
     container_name: user-service
     depends_on:
       - redis
@@ -62,7 +83,7 @@ services:
       - internal
 
   session:
-    image: docker.io/notmde/rvc-session:fa0c39ada60b30490d31ddd73e90c7705486eadd
+    image: docker.io/notmde/rvc-session:6e9c6c01b6a94fbc97779d85e7c6e679910e854f
     container_name: session-service
     depends_on:
       - redis

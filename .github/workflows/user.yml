@@ -72,7 +72,7 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git add docker-compose.yml
           git commit -m "update docker-compose.yml with ${{ github.sha }} image tag"
-          git push origin HEAD:refs/heads/update-docker-compose-for-user-service
+          git push --force origin HEAD:refs/heads/update-docker-compose-for-user-service
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
